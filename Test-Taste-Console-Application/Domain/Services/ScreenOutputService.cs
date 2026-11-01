@@ -159,7 +159,7 @@ namespace Test_Taste_Console_Application.Domain.Services
             var planets = _planetService.GetAllPlanets().ToArray();
             if (!planets.Any())
             {
-                Console.WriteLine(OutputString.NoMoonsFound);
+                Console.WriteLine(OutputString.NoPlanetsFound);
                 return;
             }
 
