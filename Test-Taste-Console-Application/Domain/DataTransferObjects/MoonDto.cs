@@ -29,5 +29,8 @@ namespace Test_Taste_Console_Application.Domain.DataTransferObjects
 
         //The average temperature of the moon in Kelvin, mapped from the API's "avgTemp" field.
         [JsonProperty("avgTemp")] public float AverageTemperature { get; set; }
+
+        //The surface gravity of the moon in m/s², mapped from the API's "gravity" field.
+        [JsonProperty("gravity")] public float Gravity { get; set; }
     }
 }
