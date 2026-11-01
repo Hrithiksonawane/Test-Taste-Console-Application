@@ -3,6 +3,7 @@ using System.IO;
 using System.Reflection;
 using log4net;
 using log4net.Config;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Test_Taste_Console_Application.Constants;
 using Test_Taste_Console_Application.Domain.Services;
@@ -29,19 +30,32 @@ namespace Test_Taste_Console_Application
 
             //The service provider gets the services.
             var screenOutputService = serviceProvider.GetService<IOutputService>();
+            var fileOutputService = serviceProvider.GetService<FileOutputService>();
 
             try
             {
+                screenOutputService.OutputAllPlanetsAndTheirAverageMoonTemperatureToConsole();
                 screenOutputService.OutputAllPlanetsAndTheirAverageMoonGravityToConsole();
                 screenOutputService.OutputAllMoonsAndTheirMassToConsole();
                 screenOutputService.OutputAllPlanetsAndTheirMoonsToConsole();
             }
             catch (Exception exception)
             {
-                //The users and developers can see the thrown exceptions.
                 Logger.Instance.Error($"{LoggerMessage.ScreenOutputOperationFailed}{exception.Message}");
                 Console.WriteLine($"{ExceptionMessage.ScreenOutputOperationFailed}{exception.Message}");
                 System.Diagnostics.Debug.WriteLine($"{ExceptionMessage.ScreenOutputOperationFailed}{exception.Message}");
+            }
+
+            try
+            {
+                fileOutputService.WriteAllPlanetsAndTheirAverageMoonTemperatureToFile();
+                fileOutputService.WriteAllMoonsAndTheirMassToFile();
+                fileOutputService.WriteAllPlanetsAndTheirMoonsToFile();
+            }
+            catch (Exception exception)
+            {
+                Logger.Instance.Error($"{LoggerMessage.FileOutputOperationFailed}{exception.Message}");
+                Console.WriteLine($"{ExceptionMessage.FileOutputOperationFailed}{exception.Message}");
             }
 
             serviceProvider.Dispose();
@@ -52,10 +66,18 @@ namespace Test_Taste_Console_Application
             //The function configures all the services.
             XmlConfigurator.Configure(LogManager.GetRepository(Assembly.GetEntryAssembly()),
                 new FileInfo(ConfigurationFileName.Logger));
+
+            var configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: false)
+                .Build();
+
+            serviceCollection.AddSingleton<IConfiguration>(configuration);
             serviceCollection.AddHttpClient<HttpClientService>();
             serviceCollection.AddSingleton<IPlanetService, PlanetService>();
             serviceCollection.AddSingleton<IOutputService, ScreenOutputService>();
             serviceCollection.AddSingleton<IMoonService, MoonService>();
+            serviceCollection.AddSingleton<FileOutputService>();
         }
     }
 }

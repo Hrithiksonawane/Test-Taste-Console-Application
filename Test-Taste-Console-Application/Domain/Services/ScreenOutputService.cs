@@ -22,6 +22,8 @@ namespace Test_Taste_Console_Application.Domain.Services
 
         public void OutputAllPlanetsAndTheirMoonsToConsole()
         {
+            Console.WriteLine("Loading planet and moon data...");
+
             //The service gets all the planets from the API.
             var planets = _planetService.GetAllPlanets().ToArray();
 
@@ -85,23 +87,27 @@ namespace Test_Taste_Console_Application.Domain.Services
                 //Under the data the footer is created.
                 ConsoleWriter.CreateLine(columnSizesForMoons);
                 ConsoleWriter.CreateEmptyLines(2);
-
-                /*
-                    This is an example of the output for the planet Earth:
-                    --------------------+--------------------+------------------------------+--------------------
-                    Planet's Number     |Planet's Id         |Planet's Semi-Major Axis      |Total Moons
-                    10                  |Terre               |0                             |1
-                    --------------------+--------------------+------------------------------+--------------------
-                    Moon's Number       |Moon's Id
-                    1                   |La Lune
-                    --------------------+------------------------------------------------------------------------
-                */
             }
+
+            Console.WriteLine("Writing planet and moon data completed.");
+            ConsoleWriter.CreateEmptyLines(1);
+
+            /*
+                This is an example of the output for the planet Earth:
+                --------------------+--------------------+------------------------------+--------------------
+                Planet's Number     |Planet's Id         |Planet's Semi-Major Axis      |Total Moons
+                10                  |Terre               |0                             |1
+                --------------------+--------------------+------------------------------+--------------------
+                Moon's Number       |Moon's Id
+                1                   |La Lune
+                --------------------+------------------------------------------------------------------------
+            */
         }
 
         public void OutputAllMoonsAndTheirMassToConsole()
         {
-            //The function works the same way as the PrintAllPlanetsAndTheirMoonsToConsole function. You can find more comments there.
+            Console.WriteLine("Loading moon mass data...");
+
             var moons = _moonService.GetAllMoons().ToArray();
             
             if (!moons.Any())
@@ -131,7 +137,10 @@ namespace Test_Taste_Console_Application.Domain.Services
 
             ConsoleWriter.CreateLine(columnSizesForMoons);
             ConsoleWriter.CreateEmptyLines(2);
-            
+
+            Console.WriteLine("Writing moon mass data completed.");
+            ConsoleWriter.CreateEmptyLines(1);
+
             /*
                 This is an example of the output for the moon around the earth:
                 --------------------+--------------------+------------------------------+--------------------
@@ -145,11 +154,12 @@ namespace Test_Taste_Console_Application.Domain.Services
 
         public void OutputAllPlanetsAndTheirAverageMoonGravityToConsole()
         {
-            //The function works the same way as the PrintAllPlanetsAndTheirMoonsToConsole function. You can find more comments there.
+            Console.WriteLine("Loading planet and moon gravity data...");
+
             var planets = _planetService.GetAllPlanets().ToArray();
             if (!planets.Any())
             {
-                Console.WriteLine(OutputString.NoMoonsFound);
+                Console.WriteLine(OutputString.NoPlanetsFound);
                 return;
             }
 
@@ -176,7 +186,10 @@ namespace Test_Taste_Console_Application.Domain.Services
 
             ConsoleWriter.CreateLine(columnSizes);
             ConsoleWriter.CreateEmptyLines(2);
-            
+
+            Console.WriteLine("Writing gravity data completed.");
+            ConsoleWriter.CreateEmptyLines(1);
+
             /*
                 --------------------+--------------------------------------------------
                 Planet's Number     |Planet's Average Moon Gravity
@@ -184,6 +197,43 @@ namespace Test_Taste_Console_Application.Domain.Services
                 1                   |0.0f
                 --------------------+--------------------------------------------------
             */
+        }
+
+        /// <inheritdoc />
+        public void OutputAllPlanetsAndTheirAverageMoonTemperatureToConsole()
+        {
+            Console.WriteLine("Loading planet and moon temperature data...");
+
+            var planets = _planetService.GetAllPlanets().ToArray();
+
+            if (!planets.Any())
+            {
+                Console.WriteLine(OutputString.NoPlanetsFound);
+                return;
+            }
+
+            var columnSizes = new[] { 20, 30 };
+            var columnLabels = new[]
+            {
+                OutputString.PlanetId, OutputString.PlanetMoonAverageTemperature
+            };
+
+            ConsoleWriter.CreateHeader(columnLabels, columnSizes);
+
+            foreach (Planet planet in planets)
+            {
+                if (planet.HasMoons())
+                {
+                    ConsoleWriter.CreateText(
+                        new[] { CultureInfoUtility.TextInfo.ToTitleCase(planet.Id), $"{planet.AverageMoonTemperature:F2}" },
+                        columnSizes);
+                }
+            }
+
+            ConsoleWriter.CreateLine(columnSizes);
+            ConsoleWriter.CreateEmptyLines(2);
+
+            Console.WriteLine("Writing temperature data completed.");
         }
     }
 }
