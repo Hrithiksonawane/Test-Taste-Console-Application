@@ -8,5 +8,10 @@
         void OutputAllPlanetsAndTheirMoonsToConsole();
         void OutputAllMoonsAndTheirMassToConsole();
         void OutputAllPlanetsAndTheirAverageMoonGravityToConsole();
+
+        /// <summary>
+        /// Outputs a table of all planets (that have at least one moon) with the average temperature of their moons in Kelvin.
+        /// </summary>
+        void OutputAllPlanetsAndTheirAverageMoonTemperatureToConsole();
     }
 }

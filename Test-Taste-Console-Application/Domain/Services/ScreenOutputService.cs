@@ -176,7 +176,7 @@ namespace Test_Taste_Console_Application.Domain.Services
 
             ConsoleWriter.CreateLine(columnSizes);
             ConsoleWriter.CreateEmptyLines(2);
-            
+
             /*
                 --------------------+--------------------------------------------------
                 Planet's Number     |Planet's Average Moon Gravity
@@ -184,6 +184,39 @@ namespace Test_Taste_Console_Application.Domain.Services
                 1                   |0.0f
                 --------------------+--------------------------------------------------
             */
+        }
+
+        /// <inheritdoc />
+        public void OutputAllPlanetsAndTheirAverageMoonTemperatureToConsole()
+        {
+            var planets = _planetService.GetAllPlanets().ToArray();
+
+            if (!planets.Any())
+            {
+                Console.WriteLine(OutputString.NoPlanetsFound);
+                return;
+            }
+
+            var columnSizes = new[] { 20, 30 };
+            var columnLabels = new[]
+            {
+                OutputString.PlanetId, OutputString.PlanetMoonAverageTemperature
+            };
+
+            ConsoleWriter.CreateHeader(columnLabels, columnSizes);
+
+            foreach (Planet planet in planets)
+            {
+                if (planet.HasMoons())
+                {
+                    ConsoleWriter.CreateText(
+                        new[] { CultureInfoUtility.TextInfo.ToTitleCase(planet.Id), $"{planet.AverageMoonTemperature:F2}" },
+                        columnSizes);
+                }
+            }
+
+            ConsoleWriter.CreateLine(columnSizes);
+            ConsoleWriter.CreateEmptyLines(2);
         }
     }
 }

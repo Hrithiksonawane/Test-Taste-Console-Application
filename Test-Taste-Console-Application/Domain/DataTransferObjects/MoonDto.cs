@@ -23,8 +23,11 @@ namespace Test_Taste_Console_Application.Domain.DataTransferObjects
         [JsonProperty("rel")] public string Rel { get; set; }
         public string URLId { get => Rel.Split('/').Last(); }
 
-        //The path to the nested property is created by using a dot. 
+        //The path to the nested property is created by using a dot.
         [JsonProperty("mass.massValue")] public float MassValue { get; set; }
         [JsonProperty("mass.massExponent")] public float MassExponent { get; set; }
+
+        //The average temperature of the moon in Kelvin, mapped from the API's "avgTemp" field.
+        [JsonProperty("avgTemp")] public float AverageTemperature { get; set; }
     }
 }
