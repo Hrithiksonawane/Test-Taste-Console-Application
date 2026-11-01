@@ -29,6 +29,7 @@ namespace Test_Taste_Console_Application
 
             //The service provider gets the services.
             var screenOutputService = serviceProvider.GetService<IOutputService>();
+            var fileOutputService = serviceProvider.GetService<FileOutputService>();
 
             try
             {
@@ -39,10 +40,21 @@ namespace Test_Taste_Console_Application
             }
             catch (Exception exception)
             {
-                //The users and developers can see the thrown exceptions.
                 Logger.Instance.Error($"{LoggerMessage.ScreenOutputOperationFailed}{exception.Message}");
                 Console.WriteLine($"{ExceptionMessage.ScreenOutputOperationFailed}{exception.Message}");
                 System.Diagnostics.Debug.WriteLine($"{ExceptionMessage.ScreenOutputOperationFailed}{exception.Message}");
+            }
+
+            try
+            {
+                fileOutputService.WriteAllPlanetsAndTheirAverageMoonTemperatureToFile();
+                fileOutputService.WriteAllMoonsAndTheirMassToFile();
+                fileOutputService.WriteAllPlanetsAndTheirMoonsToFile();
+            }
+            catch (Exception exception)
+            {
+                Logger.Instance.Error($"{LoggerMessage.FileOutputOperationFailed}{exception.Message}");
+                Console.WriteLine($"{ExceptionMessage.FileOutputOperationFailed}{exception.Message}");
             }
 
             serviceProvider.Dispose();
@@ -57,6 +69,7 @@ namespace Test_Taste_Console_Application
             serviceCollection.AddSingleton<IPlanetService, PlanetService>();
             serviceCollection.AddSingleton<IOutputService, ScreenOutputService>();
             serviceCollection.AddSingleton<IMoonService, MoonService>();
+            serviceCollection.AddSingleton<FileOutputService>();
         }
     }
 }
